@@ -125,6 +125,7 @@ clang/
 gcc/
 gcc32/
 toolchain/
+llvm-sdclang/
 
 # Kdevelop4
 *.kdev4
