@@ -120,7 +120,8 @@ x509.genkey
 all.config
 
 # Own rules
-out/
+a52q/
+a72q/
 clang/
 gcc/
 gcc32/
