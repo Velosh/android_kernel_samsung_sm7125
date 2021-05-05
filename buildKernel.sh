@@ -10,8 +10,8 @@ if [ ! -d "$(pwd)/llvm-sdclang/" ]; then
 fi
 
 # Export KBUILD flags
-export KBUILD_BUILD_USER="$(whoami)"
-export KBUILD_BUILD_HOST="$(uname -n)"
+export KBUILD_BUILD_USER="velosh"
+export KBUILD_BUILD_HOST="velosh"
 
 # Export ARCH/SUBARCH flags
 export ARCH="arm64"
