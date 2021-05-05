@@ -46,19 +46,30 @@ clear
 
 # Remove out dir folder and clean the source
 if [ "${WITH_OUTDIR}" == true ]; then
-   if [ -d "$(pwd)/out" ]; then
-      rm -rf out
+   if [ ! -d "$(pwd)/a72q" ]; then
+      mkdir a72q
+   fi
+   if [ ! -d "$(pwd)/a52q" ]; then
+      mkdir a52q
    fi
 fi
 
 # Build time
 if [ "${WITH_OUTDIR}" == true ]; then
-   if [ ! -d "$(pwd)/out" ]; then
-      mkdir out
+   if [ ! -d "$(pwd)/a72q" ]; then
+      mkdir a72q
+   fi
+   if [ ! -d "$(pwd)/a52q" ]; then
+      mkdir a52q
    fi
 fi
 
 if [ "${WITH_OUTDIR}" == true ]; then
-   "${CCACHE}" make O=out vendor/a72q_defconfig
-   "${CCACHE}" make -j64 O=out
+   "${CCACHE}" make O=a72q vendor/a72q_defconfig
+   "${CCACHE}" make -j64 O=a72q
+fi
+
+if [ "${WITH_OUTDIR}" == true ]; then
+   "${CCACHE}" make O=a52q vendor/a52q_defconfig
+   "${CCACHE}" make -j64 O=a52q
 fi
