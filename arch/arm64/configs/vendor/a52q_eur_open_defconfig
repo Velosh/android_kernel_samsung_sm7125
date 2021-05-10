@@ -5837,8 +5837,8 @@ CONFIG_FIVE_USE_QSEE=y
 # CONFIG_TEE_DRIVER_DEBUG is not set
 CONFIG_FIVE_EARLY_LOAD_TRUSTED_APP=y
 CONFIG_FIVE_SIGN_TA=n
-CONFIG_FIVE_SIGNCLIENT_PATH="/home/dpi/qb5_8815/workspace/P4_1716/buildscript/tools/signclient.jar"
-CONFIG_FIVE_PILSPLITTER_PATH="/home/dpi/qb5_8815/workspace/P4_1716/buildscript/tools/pil_splitter.py"
+CONFIG_FIVE_SIGNCLIENT_PATH="/home/dpi/qb5_8814/workspace/P4_1716/buildscript/tools/signclient.jar"
+CONFIG_FIVE_PILSPLITTER_PATH="/home/dpi/qb5_8814/workspace/P4_1716/buildscript/tools/pil_splitter.py"
 CONFIG_ICD=y
 CONFIG_ICD_USE_QSEECOM=y
 
@@ -6402,7 +6402,7 @@ CONFIG_INTEGRITY_TRUSTED_KEYRING=y
 CONFIG_INTEGRITY_AUDIT=y
 # CONFIG_IMA is not set
 # CONFIG_EVM is not set
-CONFIG_FIVE=y
+CONFIG_FIVE=n
 # CONFIG_FIVE_DEBUG is not set
 CONFIG_FIVE_CERT_USER="x509_five_user.der"
 CONFIG_FIVE_DEFAULT_HASH_SHA1=y
