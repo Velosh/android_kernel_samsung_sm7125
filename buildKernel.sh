@@ -2,11 +2,11 @@
 
 # Check if have toolchain/llvm folder
 if [ ! -d "$(pwd)/gcc/" ]; then
-   git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 gcc -b android-9.0.0_r59 --depth 1
+   git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 gcc -b android-9.0.0_r59 --depth 1 >> /dev/null 2> /dev/null
 fi
 
 if [ ! -d "$(pwd)/llvm-sdclang/" ]; then
-   git clone https://github.com/proprietary-stuff/llvm-arm-toolchain-ship-10.0 llvm-sdclang --depth 1
+   git clone https://github.com/proprietary-stuff/llvm-arm-toolchain-ship-10.0 llvm-sdclang --depth 1 >> /dev/null 2> /dev/null
 fi
 
 # Export KBUILD flags
@@ -29,14 +29,9 @@ export USE_CCACHE="1"
 ccache -M 50G
 
 # Export toolchain/clang/llvm flags
-export TOOLCHAIN_PREFIX="aarch64-linux-android-"
-export CROSS_COMPILE="$(pwd)/gcc/bin/${TOOLCHAIN_PREFIX}"
-export CLANG_PREFIX="$(pwd)/llvm-sdclang/bin/clang"
+export CROSS_COMPILE="$(pwd)/gcc/bin/aarch64-linux-android-"
 export CLANG_TRIPLE="aarch64-linux-gnu-"
-export CC="${CLANG_PREFIX}"
-
-# Export DTC_EXT
-#KERNEL_MAKE_ENV="DTC_EXT=$(pwd)/tools/dtc"
+export CC="$(pwd)/llvm-sdclang/bin/clang"
 
 # Export if/else outdir var
 export WITH_OUTDIR=true
