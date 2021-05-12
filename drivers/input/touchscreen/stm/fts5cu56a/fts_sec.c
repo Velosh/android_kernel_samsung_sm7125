@@ -755,7 +755,7 @@ static ssize_t get_lp_dump(struct device *dev, struct device_attribute *attr, ch
 	u16 dump_start, dump_end, dump_cnt;
 	int i, ret, dump_area, dump_gain;
 	unsigned char *sec_spg_dat;
-	u8 dump_clear_packet[3] = {0x01, 0x00, 0x01};
+	u8 dump_clear_packet = 0x01;
 	u16 addr;
 
 	if (!info->use_sponge)
@@ -891,8 +891,8 @@ static ssize_t get_lp_dump(struct device *dev, struct device_attribute *attr, ch
 		}
 
 		info->sponge_dump_delayed_flag = false;
-		ret = fts_write_to_sponge(info, FTS_CMD_SPONGE_OFFSET_MODE,
-				dump_clear_packet, sizeof(dump_clear_packet));
+		ret = fts_write_to_sponge(info, FTS_CMD_SPONGE_DUMP_FLUSH,
+				&dump_clear_packet, 1);
 		if (ret < 0)
 			input_err(true, &info->client->dev, "%s: Failed to clear sponge dump\n", __func__);
 	}

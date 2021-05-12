@@ -242,6 +242,15 @@
 			29 01 00 00 00 00 03 F0 A5 A5
 		];
 
+		samsung,smooth_dimming_off_tx_cmds_revA = [
+			29 00 00 00 00 00 03 F0 5A 5A
+			29 00 00 00 00 00 04 B0 00 91 63
+			29 00 00 00 00 00 02 63 20
+			29 01 00 00 11 00 02 53 20
+			29 00 00 00 00 00 02 F7 0F
+			29 01 00 00 00 00 03 F0 A5 A5
+		];
+
 		samsung,gamma_mode2_normal_tx_cmds_revG=[
 			29 00 00 00 00 00 04 B0 00 91 63
 			29 00 00 00 00 00 02 63 60	/* Dimming Speed Sync Control */
@@ -1436,8 +1445,8 @@
 				qcom,mdss-dsi-t-clk-post = <0x12>;
 
 				qcom,mdss-dsi-on-command = [
-					/* Sleep out, wait 10ms(0x0A) */
-					05 01 00 00 0A 00 02 11 00
+					/* Sleep out, wait 30ms(0x1E) */
+					05 01 00 00 1E 00 02 11 00
 
 					29 00 00 00 00 00 03 F0 5A 5A
 					29 00 00 00 00 00 03 9F A5 A5
@@ -1469,7 +1478,7 @@
 					/* Vsync Setting */
 
 					/* PCD  Setting */
-					29 00 00 00 00 00 03 CD 5C 5A
+					29 00 00 00 00 00 03 CC 5C 51
 
 					/* Freq setting */
 					29 00 00 00 00 00 04 B0 00 27 F2
@@ -1490,7 +1499,7 @@
 					29 00 00 00 00 00 02 F7 0F
 
 					29 00 00 00 00 00 03 9F 5A 5A
-					29 01 00 00 6E 00 03 F0 A5 A5 /* wait 110ms */
+					29 01 00 00 5A 00 03 F0 A5 A5 /* wait 90ms */
 				];
 
 				qcom,mdss-dsi-off-command = [
@@ -1536,8 +1545,8 @@
 				qcom,mdss-dsi-t-clk-post = <0x12>;
 
 				qcom,mdss-dsi-on-command = [
-					/* Sleep out, wait 10ms(0x0A) */
-					05 01 00 00 0A 00 02 11 00
+					/* Sleep out, wait 30ms(0x1E) */
+					05 01 00 00 1E 00 02 11 00
 
 					29 00 00 00 00 00 03 F0 5A 5A
 					29 00 00 00 00 00 03 9F A5 A5
@@ -1571,7 +1580,7 @@
 					/* Vsync Setting */
 
 					/* PCD  Setting */
-					29 00 00 00 00 00 03 CD 5C 5A
+					29 00 00 00 00 00 03 CC 5C 51
 
 					/* Freq setting */
 					29 00 00 00 00 00 04 B0 00 27 F2
@@ -1592,7 +1601,7 @@
 					29 00 00 00 00 00 02 F7 0F
 
 					29 00 00 00 00 00 03 9F 5A 5A
-					29 01 00 00 6E 00 03 F0 A5 A5 /* wait 110ms */
+					29 01 00 00 5A 00 03 F0 A5 A5 /* wait 90ms */
 				];
 
 				qcom,mdss-dsi-off-command = [

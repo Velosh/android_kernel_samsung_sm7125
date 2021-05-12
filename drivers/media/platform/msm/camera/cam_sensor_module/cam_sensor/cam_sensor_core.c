@@ -1928,7 +1928,7 @@ int cam_sensor_power_up(struct cam_sensor_ctrl_t *s_ctrl)
 		return rc;
 	}
 #if defined(CONFIG_MCLK_I2C_DELAY)
-    usleep_range(5000, 6000); //Add delay for MCLK - I2C TIMING SPEC OUT issue
+    usleep_range(11000, 12000); //Add delay for MCLK - I2C TIMING SPEC OUT issue
     CAM_INFO(CAM_SENSOR, "MCLK delay added");
 #endif
 	rc = camera_io_init(&(s_ctrl->io_master_info));
