@@ -835,7 +835,7 @@ static int __init sec_debug_init(void)
 	case ANDROID_DEBUG_LEVEL_MID:
 #endif
 
-#if 0	/* FIXME: */
+#ifdef CONFIG_SEC_A72Q_PROJECT
 		if (!force_upload)
 			qcom_scm_disable_sdi();
 #endif

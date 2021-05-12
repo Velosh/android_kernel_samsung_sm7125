@@ -482,6 +482,8 @@ enum ss_dsi_cmd_set_type {
 	TX_IRC_SUBDIVISION,
 	TX_PAC_IRC_SUBDIVISION,
 	TX_IRC_OFF,
+	TX_SMOOTH_DIMMING_ON,
+	TX_SMOOTH_DIMMING_OFF,
 
 	TX_NORMAL_BRIGHTNESS_ETC,
 
@@ -1856,7 +1858,7 @@ struct vrr_info {
 	int prev_refresh_rate;
 	bool prev_sot_hs_mode;
 	bool prev_phs_mode;
-	
+
 	/* Some displays, like hubble HAB and c2 HAC, cannot support 120hz in WQHD.
 	 * In this case, it should guarantee below sequence to prevent WQHD@120hz mode,
 	 * in case of WQHD@60hz -> FHD/HD@120hz.

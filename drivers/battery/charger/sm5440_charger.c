@@ -1409,6 +1409,7 @@ static int sm5440_hw_init_config(struct sm5440_charger *sm5440)
 	sm5440_write_reg(sm5440, SM5440_REG_PRTNCNTL, 0xFE);            /* OCP,OVP setting */
 	sm5440_update_reg(sm5440, SM5440_REG_ADCCNTL1, 1, 0x1, 3);      /* ADC average sample = 32 */
 	sm5440_write_reg(sm5440, SM5440_REG_ADCCNTL2, 0xDF);            /* ADC channel setting */
+	sm5440_write_reg(sm5440, SM5440_REG_THEMCNTL1, 0x0C);           /* Thermal Regulation threshold = 120'C */
 
 #if defined(CONFIG_BATTERY_SAMSUNG)
 	psy_chg_set_const_chg_voltage(sm5440, sm5440->pdata->battery.chg_float_voltage);

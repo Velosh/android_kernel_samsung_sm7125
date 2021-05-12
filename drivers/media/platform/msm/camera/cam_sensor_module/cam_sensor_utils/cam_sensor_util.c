@@ -1692,9 +1692,8 @@ int cam_sensor_core_power_up(struct cam_sensor_power_ctrl_t *ctrl,
 		}
 
 #if defined(CONFIG_SEC_A52Q_PROJECT) || defined(CONFIG_SEC_A72Q_PROJECT)
-		if ((power_setting->seq_type == SENSOR_VIO)
-			&& (NULL  != strstr(soc_info->dev_name, "eeprom"))) {
-			msleep(22);
+		if (power_setting->seq_type == SENSOR_VIO) {
+			usleep_range(15000, 20000);
 		}
 #endif
 

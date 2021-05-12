@@ -291,13 +291,30 @@ static ssize_t front_camera_type_show(struct device *dev,
 		return rc;
 	return 0;
 }
-#elif defined(CONFIG_SEC_R5Q_PROJECT) || defined(CONFIG_SEC_A71_PROJECT) || defined(CONFIG_SEC_M51_PROJECT) || defined(CONFIG_SEC_A52Q_PROJECT) || defined(CONFIG_SEC_A72Q_PROJECT) || defined(CONFIG_SEC_M42Q_PROJECT)
+#elif defined(CONFIG_SEC_R5Q_PROJECT) || defined(CONFIG_SEC_A71_PROJECT) || defined(CONFIG_SEC_M51_PROJECT) || defined(CONFIG_SEC_M42Q_PROJECT)
 static ssize_t front_camera_type_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
 	int rc = 0;
 	char cam_type[] = "SONY_IMX616\n";
 	rc = scnprintf(buf, PAGE_SIZE, "%s", cam_type);
+	if (rc)
+		return rc;
+	return 0;
+}
+#elif defined(CONFIG_SEC_A52Q_PROJECT) || defined(CONFIG_SEC_A72Q_PROJECT)
+static ssize_t front_camera_type_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	int rc = 0;
+	char cam_type_sony[] = "SONY_IMX616\n";
+	char cam_type_lsi[] = "SLSI_S5KGD2\n";
+
+	if (front_cam_fw_ver[4] == 'L') {
+		rc = scnprintf(buf, PAGE_SIZE, "%s", cam_type_lsi);
+	} else {
+		rc = scnprintf(buf, PAGE_SIZE, "%s", cam_type_sony);
+	}
 	if (rc)
 		return rc;
 	return 0;
@@ -2190,9 +2207,11 @@ static ssize_t ois_autotest_2nd_show(struct device *dev,
 	cnt = sprintf(buf, "%s, %d, %s, %d",
 		(x1_result ? "pass" : "fail"), (x1_result ? 0 : sinewave[0].sin_x),
 		(y1_result ? "pass" : "fail"), (y1_result ? 0 : sinewave[0].sin_y));
+#if !defined(CONFIG_SEC_A52Q_PROJECT)
 	cnt += sprintf(buf + cnt, ", %s, %d, %s, %d",
 		(x2_result ? "pass" : "fail"), (x2_result ? 0 : sinewave[1].sin_x),
 		(y2_result ? "pass" : "fail"), (y2_result ? 0 : sinewave[1].sin_y));
+#endif
 	pr_info("%s: result : %s\n", __func__, buf);
 
 	for (i = 0; i < 2; i++) {
