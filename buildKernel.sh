@@ -62,9 +62,11 @@ fi
 if [ "${WITH_OUTDIR}" == true ]; then
    "${CCACHE}" make O=a72q vendor/a72q_defconfig
    "${CCACHE}" make -j64 O=a72q
+   tools/mkdtimg create a72q/arch/arm64/boot/dtbo.img --page_size=4096 $(find a72q/arch -name "*.dtbo")
 fi
 
 if [ "${WITH_OUTDIR}" == true ]; then
    "${CCACHE}" make O=a52q vendor/a52q_defconfig
    "${CCACHE}" make -j64 O=a52q
+   tools/mkdtimg create a52q/arch/arm64/boot/dtbo.img --page_size=4096 $(find a52q/arch -name "*.dtbo")
 fi
