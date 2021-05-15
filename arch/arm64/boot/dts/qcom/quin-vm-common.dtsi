@@ -73,7 +73,7 @@
 					dev="/dev/block/platform/vdevs/1c0f0000.virtio_blk/la_vendor";
 					type = "ext4";
 					mnt_flags = "ro,barrier=1,discard";
-					fsmgr_flags = "wait,avb";
+					fsmgr_flags = "wait";
 					status = "ok";
 				};
 			};
