@@ -102,11 +102,6 @@ static bool sec_direct_chg_set_switching_charge(
 {
 	union power_supply_propval value = {0,};
 
-	if (charger->charger_mode_main == charger_mode && !(charger->dc_retry_cnt)) {
-		pr_info("%s: charger_mode is same(%s)\n", __func__,
-			sec_direct_charger_mode_str[charger->charger_mode_main]);
-		return false;
-	}
 
 	pr_info("%s: charger_mode(%s->%s)\n", __func__,
 		sec_direct_charger_mode_str[charger->charger_mode_main],
@@ -136,57 +131,79 @@ static int sec_direct_chg_check_charging_source(struct sec_direct_charger_info *
 			charger->ta_alert_mode =  value.intval;
 		}
 
-		pr_info("%s: dc_err(%d), ta_alert(%d)\n", __func__, charger->dc_err,
-			charger->ta_alert_mode);
+		pr_info("%s: dc_err(%d), ta_alert_mode(%d)\n", __func__, charger->dc_err, charger->ta_alert_mode);
 		value.intval = SEC_BAT_CURRENT_EVENT_DC_ERR;
-		psy_do_property("battery", set,
-			POWER_SUPPLY_EXT_PROP_CURRENT_EVENT, value);
-		if (!charger->ta_alert_wa || (charger->ta_alert_mode == OCP_NONE))
+		psy_do_property("battery", set, POWER_SUPPLY_EXT_PROP_CURRENT_EVENT, value);
+		if (!charger->ta_alert_wa || (charger->ta_alert_mode == OCP_NONE)) {
+			pr_info("%s:  S/C was selected! ta_alert_mode(%d)\n", __func__, charger->ta_alert_mode);
 			return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+		}
 	}
 
-	psy_do_property("battery", get,
-				POWER_SUPPLY_PROP_STATUS, value);
+	psy_do_property("battery", get, POWER_SUPPLY_PROP_STATUS, value);
 	charger->batt_status = value.intval;
 
-	psy_do_property("battery", get,
-				POWER_SUPPLY_PROP_CAPACITY, value);
+	psy_do_property("battery", get, POWER_SUPPLY_PROP_CAPACITY, value);
 	charger->capacity = value.intval;
 
-	psy_do_property("battery", get,
-				POWER_SUPPLY_EXT_PROP_WIRELESS_TX_ENABLE, value);
-	charger->wc_tx_enable = value.intval;
 #if defined(CONFIG_WIRELESS_TX_MODE)
+	/* check TX enable*/
+	psy_do_property("battery", get, POWER_SUPPLY_EXT_PROP_WIRELESS_TX_ENABLE, value);
+	charger->wc_tx_enable = value.intval;
 	if (charger->wc_tx_enable) {
-	pr_info("@TX_Mode %s: Source Switching charger during Tx mode\n", __func__);
+		pr_info("@TX_Mode %s: Source Switching charger during Tx mode\n", __func__);
 		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
 	}
 #endif
-	psy_do_property("battery", get,
-				POWER_SUPPLY_PROP_TEMP, value);
-	charger->bat_temp = value.intval;
 
-	psy_do_property("battery", get,
-				POWER_SUPPLY_EXT_PROP_CURRENT_EVENT, value);
-	if (((charger->bat_temp <= charger->pdata->dchg_temp_low_threshold) || (charger->bat_temp >= charger->pdata->dchg_temp_high_threshold)) ||
-		(value.intval & SEC_BAT_CURRENT_EVENT_SWELLING_MODE || value.intval & SEC_BAT_CURRENT_EVENT_HV_DISABLE) || ((value.intval & SEC_BAT_CURRENT_EVENT_DC_ERR) && charger->ta_alert_mode == OCP_NONE) || charger->test_mode_source == SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING)
+	/* check Tbat temperature */
+	psy_do_property("battery", get, POWER_SUPPLY_PROP_TEMP, value);
+	if (value.intval < charger->pdata->dchg_temp_low_threshold ||
+			value.intval >= charger->pdata->dchg_temp_high_threshold) {
+		pr_info("%s:  S/C was selected! Tbat(%d)\n", __func__, value.intval);
 		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+	}
 
-	psy_do_property("battery", get,
-		POWER_SUPPLY_PROP_ONLINE, value);
-	if (!is_pd_apdo_wire_type(charger->cable_type) || !is_pd_apdo_wire_type(value.intval))
+	/* check current event */
+	psy_do_property("battery", get, POWER_SUPPLY_EXT_PROP_CURRENT_EVENT, value);
+	if (value.intval & SEC_BAT_CURRENT_EVENT_SWELLING_MODE ||
+			value.intval & SEC_BAT_CURRENT_EVENT_HV_DISABLE ||
+			(value.intval & SEC_BAT_CURRENT_EVENT_DC_ERR && charger->ta_alert_mode == OCP_NONE)) {
+		pr_info("%s:  S/C was selected! BAT_CURRENT_EVENT(0x%x)\n", __func__, value.intval);
 		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+	}
 
-	if ((charger->batt_status == POWER_SUPPLY_STATUS_FULL) ||
-		(charger->batt_status == POWER_SUPPLY_STATUS_NOT_CHARGING) ||
-		(charger->batt_status == POWER_SUPPLY_STATUS_DISCHARGING))
+	/* check test mode */
+	if (charger->test_mode_source == SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING) {
+		pr_info("%s:  S/C was selected! tese_mode_source(%d)\n", __func__, charger->test_mode_source);
 		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+	}
 
-	psy_do_property("battery", get,
-				POWER_SUPPLY_EXT_PROP_DIRECT_HAS_APDO, value);
-
-	if (charger->direct_chg_done || (charger->capacity >= 95) || !value.intval)
+	/* check apdo */
+	psy_do_property("battery", get, POWER_SUPPLY_PROP_ONLINE, value);
+	if (!is_pd_apdo_wire_type(charger->cable_type) || !is_pd_apdo_wire_type(value.intval)) {
+		pr_info("%s:  S/C was selected! Not APDO(%d, %d)\n",
+				__func__, charger->cable_type, value.intval);
 		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+	}
+
+	/* check battery->status */
+	if (charger->batt_status == POWER_SUPPLY_STATUS_FULL ||
+		charger->batt_status == POWER_SUPPLY_STATUS_NOT_CHARGING ||
+		charger->batt_status == POWER_SUPPLY_STATUS_DISCHARGING) {
+		pr_info("%s:  S/C was selected! battery->status(%d)\n",
+				__func__, charger->batt_status);
+		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+	}
+
+	/* check charging status */
+	psy_do_property("battery", get, POWER_SUPPLY_EXT_PROP_DIRECT_HAS_APDO, value);
+	if (charger->direct_chg_done || (charger->capacity >= 95) || !value.intval) {
+		pr_info("%s:  S/C was selected! dc_done(%s), SoC(%d), has_apdo(%d)\n",
+				__func__, charger->direct_chg_done ? "TRUE" : "FALSE",
+				charger->capacity, value.intval);
+		return SEC_DIRECT_CHG_CHARGING_SOURCE_SWITCHING;
+	}
 
 	return SEC_DIRECT_CHG_CHARGING_SOURCE_DIRECT;
 }
