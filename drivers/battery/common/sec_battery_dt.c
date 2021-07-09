@@ -1410,6 +1410,11 @@ int sec_bat_parse_dt(struct device *dev,
 	if (ret)
 		pdata->siop_hv_wireless_charging_limit_current = SIOP_HV_WIRELESS_CHARGING_LIMIT_CURRENT;
 
+	ret = of_property_read_u32(np, "battery,siop_level_20_power",
+			&pdata->siop_level_20_power);
+	if (ret)
+		pdata->siop_level_20_power = 5000;
+	
 	ret = of_property_read_u32(np, "battery,wireless_otg_input_current",
 			&pdata->wireless_otg_input_current);
 	if (ret)

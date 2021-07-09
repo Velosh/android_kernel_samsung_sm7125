@@ -3438,24 +3438,24 @@ static char DSI0_UI_NATURAL_MDNIE_5[] = {
 	0xB1, // CRC, BLF
 	0x00,
 	0x00, // crc_bypass
-	0xa9, // crc_lut_mode1_rr
-	0x00, // crc_lut_mode1_rg
-	0x00, // crc_lut_mode1_rb
-	0x18, // crc_lut_mode1_gr
-	0xcf, // crc_lut_mode1_gg
-	0x00, // crc_lut_mode1_gb
-	0x04, // crc_lut_mode1_br
-	0x08, // crc_lut_mode1_bg
-	0xce, // crc_lut_mode1_bb
-	0x22, // crc_lut_mode1_cr
-	0xf4, // crc_lut_mode1_cg
-	0xe2, // crc_lut_mode1_cb
-	0xd4, // crc_lut_mode1_mr
-	0x00, // crc_lut_mode1_mg
-	0xdb, // crc_lut_mode1_mb
-	0xd6, // crc_lut_mode1_yr
-	0xd8, // crc_lut_mode1_yg
-	0x00, // crc_lut_mode1_yb
+	0xad, // crc_lut_mode1_rr
+	0x02, // crc_lut_mode1_rg
+	0x04, // crc_lut_mode1_rb
+	0x41, // crc_lut_mode1_gr
+	0xff, // crc_lut_mode1_gg
+	0x12, // crc_lut_mode1_gb
+	0x06, // crc_lut_mode1_br
+	0x05, // crc_lut_mode1_bg
+	0xbd, // crc_lut_mode1_bb
+	0x4d, // crc_lut_mode1_cr
+	0xe9, // crc_lut_mode1_cg
+	0xdb, // crc_lut_mode1_cb
+	0xc0, // crc_lut_mode1_mr
+	0x08, // crc_lut_mode1_mg
+	0xcb, // crc_lut_mode1_mb
+	0xe5, // crc_lut_mode1_yr
+	0xdc, // crc_lut_mode1_yg
+	0x17, // crc_lut_mode1_yb
 	0xff, // crc_lut_mode1_wr
 	0xfa, // crc_lut_mode1_wg
 	0xf0, // crc_lut_mode1_wb

@@ -594,7 +594,11 @@ static void pd_pre_cc_work(struct work_struct *work)
 	if (sm_dc->wq.pps_cl) {
 		if ((adc_ibus < sm_dc->wq.ci_gl - (PPS_C_STEP * 6)) &&
 				(sm_dc->ta.c < ((sm_dc->wq.ci_gl * 90)/100)))
+#if defined(CONFIG_SEC_FACTORY)
+			sm_dc->ta.c += (PPS_C_STEP * 5);
+#else
 			sm_dc->ta.c += (PPS_C_STEP * 3);
+#endif
 		else
 			sm_dc->ta.c += PPS_C_STEP;
 

@@ -25,7 +25,6 @@ fw-external-y := $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE))
 
 fw-external-$(CONFIG_TOUCHSCREEN_IST40XX) += tsp_imagis/ist40xx_r1.bin tsp_imagis/ist40xx_r1_cmcs.bin \
 						tsp_imagis/ist40xx_a70.bin tsp_imagis/ist40xx_a70_cmcs.bin tsp_imagis/ist40xx_a70s.bin tsp_imagis/ist40xx_a70s_cmcs.bin
-fw-external-$(CONFIG_TOUCHSCREEN_IST4050) += tsp_imagis/ist40xx_a31.bin tsp_imagis/ist40xx_a31_cmcs.bin
 						
 fw-external-$(CONFIG_TOUCHSCREEN_MELFAS_MSS100) += tsp_melfas/mss100_a70s.bin
 

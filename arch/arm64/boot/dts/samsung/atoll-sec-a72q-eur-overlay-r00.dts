@@ -3997,7 +3997,7 @@
 
 						s2mpb03-ldo1 {
 							regulator-name = "s2mpb03-ldo1";
-							regulator-min-microvolt = <0x100590>;
+							regulator-min-microvolt = <0xf4240>;
 							regulator-max-microvolt = <0x100590>;
 							phandle = <0x90>;
 						};
@@ -4032,7 +4032,7 @@
 
 						s2mpb03-ldo6 {
 							regulator-name = "s2mpb03-ldo6";
-							regulator-min-microvolt = <0x2c4020>;
+							regulator-min-microvolt = <0x2ab980>;
 							regulator-max-microvolt = <0x2c4020>;
 							phandle = <0x8f>;
 						};
@@ -4166,12 +4166,14 @@
 				samsung,panel-vendor = "SDC";
 				samsung,disp-model = "AMS667YM01";
 				samsung,support_gamma_mode2;
+				samsung,skip_read_on_pre;
 				samsung,elvss_interpolation_temperature = <0xfffffff0>;
 				samsung,support_lpm;
 				samsung,support_gpara;
 				samsung,pointing_gpara;
 				samsung,two_byte_gpara;
 				samsung,rsc_4_frame_idle;
+				samsung,support_factory_panel_swap;
 				samsung,support-optical-fingerprint;
 				samsung,support_vrr_based_bl;
 				ss,self_display = <0x63>;
@@ -4267,7 +4269,7 @@
 						qcom,mdss-dsi-panel-phy-timings = <0x360f0e 0x2d2a0f0f 0xd020400>;
 						qcom,mdss-dsi-t-clk-pre = <0x2f>;
 						qcom,mdss-dsi-t-clk-post = <0x12>;
-						qcom,mdss-dsi-on-command = [05 01 00 00 1e 00 02 11 00 29 00 00 00 00 00 03 f0 5a 5a 29 00 00 00 00 00 03 9f a5 a5 29 00 00 00 00 00 2a f2 00 05 0e 58 54 00 0c 00 04 30 b8 30 b8 0c 04 bc 26 e8 0c 00 04 10 00 10 26 a8 10 00 10 10 34 10 00 40 30 c8 00 c8 00 00 ce 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 02 35 00 29 00 00 00 00 00 05 2a 00 00 04 37 29 00 00 00 00 00 05 2b 00 00 09 5f 29 00 00 00 00 00 0a c2 1b 41 b0 0e 00 3c 5a 00 00 29 00 00 00 00 00 02 e5 15 29 00 00 00 00 00 04 ed 44 4c 20 29 00 00 00 00 00 03 cc 5c 51 29 00 00 00 00 00 04 b0 00 27 f2 29 00 00 00 00 00 02 f2 00 29 00 00 00 00 00 04 b0 00 30 6a 29 00 00 00 00 00 02 6a 10 29 00 00 00 00 00 04 b0 00 92 63 29 00 00 00 00 00 02 63 04 29 00 00 00 00 00 03 60 08 00 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 03 9f 5a 5a 29 01 00 00 5a 00 03 f0 a5 a5];
+						qcom,mdss-dsi-on-command = [05 01 00 00 1e 00 02 11 00 29 00 00 00 00 00 03 f0 5a 5a 29 00 00 00 00 00 03 9f a5 a5 29 00 00 00 00 00 2a f2 00 05 0e 58 54 00 0c 00 04 30 b8 30 b8 0c 04 bc 26 e8 0c 00 04 10 00 10 26 a8 10 00 10 10 34 10 00 40 30 c8 00 c8 00 00 ce 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 02 35 00 29 00 00 00 00 00 05 2a 00 00 04 37 29 00 00 00 00 00 05 2b 00 00 09 5f 29 00 00 00 00 00 0a c2 1b 41 b0 0e 00 3c 5a 00 00 29 00 00 00 00 00 02 e5 15 29 00 00 00 00 00 04 ed 44 4c 20 29 00 00 00 00 00 03 cc 5c 51 29 00 00 00 00 00 04 b0 00 27 f2 29 00 00 00 00 00 02 f2 00 29 00 00 00 00 00 04 b0 00 92 63 29 00 00 00 00 00 02 63 04 29 00 00 00 00 00 03 60 08 00 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 03 9f 5a 5a 29 01 00 00 5a 00 03 f0 a5 a5];
 						qcom,mdss-dsi-off-command = [29 00 00 00 00 00 03 9f a5 a5 05 01 00 00 14 00 02 28 00 05 01 00 00 78 00 02 10 00 29 01 00 00 00 00 03 9f 5a 5a];
 						qcom,mdss-dsi-on-command-state = "dsi_hs_mode";
 						qcom,mdss-dsi-off-command-state = "dsi_hs_mode";
@@ -4292,7 +4294,7 @@
 						qcom,mdss-dsi-panel-phy-timings = <0x360f0e 0x2d2a0f0f 0xd020400>;
 						qcom,mdss-dsi-t-clk-pre = <0x2f>;
 						qcom,mdss-dsi-t-clk-post = <0x12>;
-						qcom,mdss-dsi-on-command = [05 01 00 00 1e 00 02 11 00 29 00 00 00 00 00 03 f0 5a 5a 29 00 00 00 00 00 03 9f a5 a5 29 00 00 00 00 00 2a f2 00 05 0e 58 54 00 0c 00 04 30 b8 30 b8 0c 04 bc 26 e8 0c 00 04 10 00 10 26 a8 10 00 10 10 34 10 00 40 30 c8 00 c8 00 00 ce 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 02 35 00 29 00 00 00 00 00 05 2a 00 00 04 37 29 00 00 00 00 00 05 2b 00 00 09 5f 29 00 00 00 00 00 0a c2 1b 41 b0 0e 00 3c 5a 00 00 29 00 00 00 00 00 02 e5 15 29 00 00 00 00 00 04 ed 44 4c 20 29 00 00 00 00 00 03 cc 5c 51 29 00 00 00 00 00 04 b0 00 27 f2 29 00 00 00 00 00 02 f2 00 29 00 00 00 00 00 04 b0 00 30 6a 29 00 00 00 00 00 02 6a 10 29 00 00 00 00 00 04 b0 00 92 63 29 00 00 00 00 00 02 63 04 29 00 00 00 00 00 03 60 00 00 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 03 9f 5a 5a 29 01 00 00 5a 00 03 f0 a5 a5];
+						qcom,mdss-dsi-on-command = [05 01 00 00 1e 00 02 11 00 29 00 00 00 00 00 03 f0 5a 5a 29 00 00 00 00 00 03 9f a5 a5 29 00 00 00 00 00 2a f2 00 05 0e 58 54 00 0c 00 04 30 b8 30 b8 0c 04 bc 26 e8 0c 00 04 10 00 10 26 a8 10 00 10 10 34 10 00 40 30 c8 00 c8 00 00 ce 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 02 35 00 29 00 00 00 00 00 05 2a 00 00 04 37 29 00 00 00 00 00 05 2b 00 00 09 5f 29 00 00 00 00 00 0a c2 1b 41 b0 0e 00 3c 5a 00 00 29 00 00 00 00 00 02 e5 15 29 00 00 00 00 00 04 ed 44 4c 20 29 00 00 00 00 00 03 cc 5c 51 29 00 00 00 00 00 04 b0 00 27 f2 29 00 00 00 00 00 02 f2 00 29 00 00 00 00 00 04 b0 00 92 63 29 00 00 00 00 00 02 63 04 29 00 00 00 00 00 03 60 00 00 29 00 00 00 00 00 02 f7 0f 29 00 00 00 00 00 03 9f 5a 5a 29 01 00 00 5a 00 03 f0 a5 a5];
 						qcom,mdss-dsi-off-command = [29 00 00 00 00 00 03 9f a5 a5 05 01 00 00 14 00 02 28 00 05 01 00 00 78 00 02 10 00 29 01 00 00 00 00 03 9f 5a 5a];
 						qcom,mdss-dsi-on-command-state = "dsi_hs_mode";
 						qcom,mdss-dsi-off-command-state = "dsi_hs_mode";
@@ -5273,7 +5275,7 @@
 				cam_clk-supply = <0xffffffff>;
 				regulator-names = "cam_vio", "cam_vana", "cam_vdig", "cam_clk";
 				rgltr-cntrl-support;
-				rgltr-min-voltage = <0x1b7740 0x2c4020 0x100590 0x0>;
+				rgltr-min-voltage = <0x1b7740 0x2ab980 0x100590 0x0>;
 				rgltr-max-voltage = <0x1b7740 0x2c4020 0x100590 0x0>;
 				rgltr-load-current = <0x30d40 0x30d40 0x30d40 0x0>;
 				gpio-no-mux = <0x0>;
@@ -5322,7 +5324,7 @@
 				cam_clk-supply = <0xffffffff>;
 				regulator-names = "cam_vio", "cam_vana", "cam_vdig", "cam_clk";
 				rgltr-cntrl-support;
-				rgltr-min-voltage = <0x1b7740 0x2c4020 0x100590 0x0>;
+				rgltr-min-voltage = <0x1b7740 0x2ab980 0x100590 0x0>;
 				rgltr-max-voltage = <0x1b7740 0x2c4020 0x100590 0x0>;
 				rgltr-load-current = <0x30d40 0x30d40 0x30d40 0x0>;
 				gpio-no-mux = <0x0>;
@@ -5989,19 +5991,19 @@
 				battery_params {
 					battery,id = <0x0>;
 					battery0,battery_type = <0x114e 0x21b3>;
-					battery0,battery_table0 = <0x1400 0x1b8a 0x1c39 0x1cb7 0x1d5b 0x1d77 0x1d87 0x1d94 0x1dba 0x1df0 0x1e00 0x1e5a 0x1e7f 0x1ed1 0x1f0b 0x1f47 0x1f7b 0x1fce 0x200d 0x2072 0x2112 0x21a2 0x2265 0x2400>;
-					battery0,battery_table1 = <0x0 0x99 0x1b3 0x2cc 0x4e6 0x600 0x933 0xd80 0x1019 0x1580 0x1819 0x22cc 0x2833 0x32e6 0x3833 0x3d80 0x4033 0x42e6 0x4599 0x4ae6 0x52e6 0x594c 0x6400 0x6419>;
+					battery0,battery_table0 = <0x1400 0x1b77 0x1c40 0x1ccb 0x1d31 0x1d6f 0x1d81 0x1d88 0x1da0 0x1de3 0x1e1f 0x1e45 0x1e5e 0x1e7e 0x1ebc 0x1efb 0x1f27 0x1faf 0x2009 0x209b 0x2103 0x218b 0x227c 0x2400>;
+					battery0,battery_table1 = <0x0 0x99 0x1b3 0x2cc 0x3e6 0x500 0x7b3 0xa80 0xd4c 0x12cc 0x1b19 0x2099 0x2619 0x2b99 0x3133 0x36b3 0x3980 0x3f00 0x4480 0x4ccc 0x524c 0x58e6 0x6400 0x6419>;
 					battery0,battery_table2 = <0x4b4b 0x4444 0x4040 0x3e3e 0x3c3c 0x3b3b 0x3838 0x3737 0x3535 0x3434 0x3434 0x3333 0x3333 0x3333 0x3333 0x3232>;
 					battery0,rs_value = <0xa3 0xa3 0x3800 0x200 0x599 0x599 0x100>;
 					battery0,v_alarm = <0xc1c 0xc8>;
 					battery0,topoff = <0x2ee>;
-					battery0,i_cal = <0x0 0x0 0x800 0x800 0x0 0x0 0x800 0x814>;
+					battery0,i_cal = <0x0 0x0 0x800 0x800 0x0 0x0 0x800 0x81e>;
 					battery0,v_cal = <0x1 0x0 0x0 0x1 0x0 0x0 0x0>;
 					battery0,temp_std = <0x19>;
 					battery0,tem_poff = <0xd48 0x32 0xcb2 0x32>;
-					battery0,aux_ctrl = <0x302 0x5800>;
-					battery0,data_ver = <0x8>;
-					battery0,v_max_table = <0x2265 0x2170 0x214e 0x20f8 0x20ba>;
+					battery0,aux_ctrl = <0x322 0x5800>;
+					battery0,data_ver = <0x9>;
+					battery0,v_max_table = <0x227c 0x225f 0x2243 0x2226 0x21d9>;
 					battery0,q_max_table = <0x21b3 0x210d 0x2068 0x1fc2 0x1e23>;
 				};
 			};
