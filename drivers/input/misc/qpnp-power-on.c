@@ -38,8 +38,9 @@
 #include <linux/sec_debug.h>
 
 #ifdef CONFIG_SEC_PM
-int pon_index;
-int poff_index;
+int pon_index[2];	/* Array size is # of pmic */
+int poff_index[2];
+int num_pmic;
 #endif
 
 #define PMIC_VER_8941				0x01
@@ -297,7 +298,9 @@ static u32 s1_delay[PON_S1_COUNT_MAX + 1] = {
 #ifdef CONFIG_SEC_PM
 static const char * const sec_pon_reason[] = {
 	/* PON_PON_REASON1 */
-	"HARDRST", "SMPL", "RTC", "DC", "USB", "PON1", "CBL", "KPD"
+	"HARDRST", "SMPL", "RTC", "DC", "USB", "PON1", "CBL", "KPD",
+
+	"UNKNOWN"
 };
 
 static const char * const sec_poff_reason[] = {
@@ -317,7 +320,9 @@ static const char * const sec_poff_reason[] = {
 	"N/A", "N/A", "N/A", "N/A",
 
 	/* PON_S3_RESET_REASON */
-	"S3_FAUNT_N", "S3_PBS_WD", "S3_PBS_NACK", "S3_KPDRES"
+	"S3_FAUNT_N", "S3_PBS_WD", "S3_PBS_NACK", "S3_KPDRES",
+
+	"UNKNOWN"
 };
 #endif
 
@@ -1548,17 +1553,24 @@ EXPORT_SYMBOL(qpnp_set_resin_wk_int);
 ssize_t sec_get_pwrsrc(char *buf)
 {
 	ssize_t size = 0;
+	int i = 0;
 
-	if (poff_index >= 0) {
-		size += sprintf(buf, "OFFSRC: %s / ONSRC: %s\n",
-			sec_poff_reason[poff_index],
-			sec_pon_reason[pon_index]);
+	size = sprintf(buf, "OFFSRC:(");
+	for (i = 0; i < num_pmic; i++) {
+		size += sprintf(buf + size, "%s",
+				sec_poff_reason[poff_index[i]]);
+		if (i < (num_pmic - 1))
+			size += sprintf(buf + size, ",");
 	}
-	else {
-		/* If poff reason is XVDD, poff_index is -1 */
-		size += sprintf(buf, "OFFSRC: UNKNOWN / ONSRC: %s\n",
-			sec_pon_reason[pon_index]);
+	size += sprintf(buf + size, ")");
+	size += sprintf(buf + size, " / ONSRC:(");
+	for (i = 0; i < num_pmic; i++) {
+		size += sprintf(buf + size, "%s",
+				sec_pon_reason[pon_index[i]]);
+		if (i < (num_pmic - 1))
+			size += sprintf(buf + size, ",");
 	}
+	size += sprintf(buf + size, ")\n");
 
 	return size;
 }
@@ -2682,7 +2694,10 @@ static int qpnp_pon_read_hardware_info(struct qpnp_pon *pon, bool sys_reset)
 
 	index = ffs(pon_sts) - 1;
 #ifdef CONFIG_SEC_PM
-	pon_index = index;
+	if (index > -1)
+		pon_index[num_pmic] = index;
+	else
+		pon_index[num_pmic] = ARRAY_SIZE(sec_pon_reason) - 1;
 #endif
 	cold_boot = sys_reset_dev ? !_qpnp_pon_is_warm_reset(sys_reset_dev)
 				  : !_qpnp_pon_is_warm_reset(pon);
@@ -2718,7 +2733,11 @@ static int qpnp_pon_read_hardware_info(struct qpnp_pon *pon, bool sys_reset)
 	}
 	index = ffs(poff_sts) - 1 + reason_index_offset;
 #ifdef CONFIG_SEC_PM
-	poff_index = index;
+	if (index > -1)
+		poff_index[num_pmic] = index;
+	else
+		poff_index[num_pmic] = ARRAY_SIZE(sec_poff_reason) - 1;
+	num_pmic++;
 #endif
 	if (index >= ARRAY_SIZE(qpnp_poff_reason) || index < 0) {
 		dev_info(dev, "PMIC@SID%d: Unknown power-off reason\n",

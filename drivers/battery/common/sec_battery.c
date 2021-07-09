@@ -594,8 +594,8 @@ static void sec_bat_get_charging_current_by_siop(struct sec_battery_info *batter
 			if (battery->wire_status == SEC_BATTERY_CABLE_HV_TA_CHG_LIMIT)
 				input_voltage = SEC_INPUT_VOLTAGE_5V;
 
-			if (input_current > (5000 / input_voltage))
-				input_current = 5000 / input_voltage;
+			if (input_current > (battery->pdata->siop_level_20_power / input_voltage))
+				input_current = battery->pdata->siop_level_20_power / input_voltage;
 		}
 
 		sec_vote(battery->input_vote, VOTER_SIOP, true, input_current);
@@ -6374,11 +6374,11 @@ static int usb_typec_handle_notification(struct notifier_block *nb,
 		dev_info(battery->dev, "%s: pd_event(%d)\n", __func__,
 			(*(struct pdic_notifier_struct *)usb_typec_info.pd).event);
 #endif
-		battery->init_src_cap = false;
 		if ((*(struct pdic_notifier_struct *)usb_typec_info.pd).event == PDIC_NOTIFY_EVENT_DETACH) {
 			dev_info(battery->dev, "%s: skip pd operation - attach(%d)\n", __func__, usb_typec_info.attach);
 			battery->pdic_attach = false;
 			battery->pdic_ps_rdy = false;
+			battery->init_src_cap = false;
 			battery->hv_pdo = false;
 			battery->pd_list.now_pd_index = 0;
 			battery->pd_list.now_isApdo = false;
@@ -6393,6 +6393,7 @@ static int usb_typec_handle_notification(struct notifier_block *nb,
 
 			battery->pdic_attach = false;
 			battery->pdic_ps_rdy = false;
+			battery->init_src_cap = false;
 			battery->hv_pdo = false;
 			battery->pd_list.now_pd_index = 0;
 			goto skip_cable_check;
@@ -6415,6 +6416,7 @@ static int usb_typec_handle_notification(struct notifier_block *nb,
 			mutex_unlock(&battery->typec_notylock);
 			return 0;
 		}
+		battery->init_src_cap = false;
 		if ((*(struct pdic_notifier_struct *)usb_typec_info.pd).event == PDIC_NOTIFY_EVENT_PD_SINK_CAP ||
 			battery->update_pd_list) {
 			pr_info("%s : update_pd_list(%d)\n", __func__, battery->update_pd_list);

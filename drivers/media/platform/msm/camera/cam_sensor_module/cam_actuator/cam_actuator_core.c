@@ -236,7 +236,7 @@ static void cam_actuator_busywait(struct cam_actuator_ctrl_t *a_ctrl)
 			CAM_DBG(CAM_ACTUATOR, "Busy");
 #if defined(CONFIG_SAMSUNG_ACTUATOR_DW9817)
 			msleep(5);
-#elif defined(CONFIG_SAMSUNG_ACTUATOR_DW9808) || defined(CONFIG_SAMSUNG_ACTUATOR_FP5529)
+#elif defined(CONFIG_SAMSUNG_ACTUATOR_DW9808) || defined(CONFIG_SAMSUNG_ACTUATOR_FP5529) || defined(CONFIG_SAMSUNG_HW_SOFTLANDING)
 			msleep(10);
 #endif
 		}
@@ -313,7 +313,7 @@ static int32_t cam_actuator_do_soft_landing(struct cam_actuator_ctrl_t *a_ctrl)
 }
 #endif
 
-#if defined(CONFIG_SAMSUNG_ACTUATOR_DW9808) || defined(CONFIG_SAMSUNG_ACTUATOR_FP5529)
+#if defined(CONFIG_SAMSUNG_ACTUATOR_DW9808) || defined(CONFIG_SAMSUNG_ACTUATOR_FP5529) || defined(CONFIG_SAMSUNG_HW_SOFTLANDING)
 static int32_t cam_actuator_do_soft_landing(struct cam_actuator_ctrl_t *a_ctrl)
 {
 	int32_t rc = 0;

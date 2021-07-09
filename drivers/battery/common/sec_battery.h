@@ -682,6 +682,7 @@ typedef struct sec_battery_platform_data {
 	int siop_wireless_charging_limit_current;
 	int siop_hv_wireless_input_limit_current;
 	int siop_hv_wireless_charging_limit_current;
+	int siop_level_20_power;
 	int wireless_otg_input_current;
 	int wc_hero_stand_cc_cv;
 	int wc_hero_stand_cv_current;

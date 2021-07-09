@@ -4,14 +4,14 @@
  *
  *	Description:  samsung display panel file
  *
- *	Author: jb09.kim
+ *	Author: cj1225.jang
  *	Company:  Samsung Electronics
  *
  * ================================================================
  */
 /*
 <one line to give the program's name and a brief idea of what it does.>
-Copyright (C) 2017, Samsung Electronics. All rights reserved.
+Copyright (C) 2010, Samsung Electronics. All rights reserved.
 
 *
  * This program is free software; you can redistribute it and/or modify
@@ -40,8 +40,14 @@ static char ss_panel_revision(struct samsung_display_driver_data *vdd)
 	case 0x02:
 		vdd->panel_revision = 'B';
 		break;
+	case 0x03:
+		vdd->panel_revision = 'C';
+		break;
+	case 0x04:
+		vdd->panel_revision = 'D';
+		break;
 	default:
-		vdd->panel_revision = 'B';
+		vdd->panel_revision = 'D';
 		LCD_ERR("Invalid panel_rev(default rev : %c)\n", vdd->panel_revision);
 		break;
 	}
@@ -69,6 +75,54 @@ static int samsung_panel_on_pre(struct samsung_display_driver_data *vdd)
 
 static int samsung_panel_on_post(struct samsung_display_driver_data *vdd)
 {
+	/* Module info */
+	if (!vdd->module_info_loaded_dsi) {
+		if (IS_ERR_OR_NULL(vdd->panel_func.samsung_module_info_read))
+			LCD_ERR("no samsung_module_info_read function\n");
+		else
+			vdd->module_info_loaded_dsi = vdd->panel_func.samsung_module_info_read(vdd);
+	}
+
+	/* Manufacture date */
+	if (!vdd->manufacture_date_loaded_dsi) {
+		if (IS_ERR_OR_NULL(vdd->panel_func.samsung_manufacture_date_read))
+			LCD_ERR("no samsung_manufacture_date_read function\n");
+		else
+			vdd->manufacture_date_loaded_dsi = vdd->panel_func.samsung_manufacture_date_read(vdd);
+	}
+
+	/* DDI ID */
+	if (!vdd->ddi_id_loaded_dsi) {
+		if (IS_ERR_OR_NULL(vdd->panel_func.samsung_ddi_id_read))
+			LCD_ERR("no samsung_ddi_id_read function\n");
+		else
+			vdd->ddi_id_loaded_dsi = vdd->panel_func.samsung_ddi_id_read(vdd);
+	}
+
+	/* MDNIE X,Y (1.Manufacture Date -> 2.MDNIE X,Y -> 3.Cell ID -> 4.OCTA ID) */
+	if (!vdd->mdnie_loaded_dsi) {
+		if (IS_ERR_OR_NULL(vdd->panel_func.samsung_mdnie_read))
+			LCD_ERR("no samsung_mdnie_read function\n");
+		else
+			vdd->mdnie_loaded_dsi = vdd->panel_func.samsung_mdnie_read(vdd);
+	}
+
+	/* Panel Unique Cell ID (1.Manufacture Date -> 2.MDNIE X,Y -> 3.Cell ID -> 4.OCTA ID) */
+	if (!vdd->cell_id_loaded_dsi) {
+		if (IS_ERR_OR_NULL(vdd->panel_func.samsung_cell_id_read))
+			LCD_ERR("no samsung_cell_id_read function\n");
+		else
+			vdd->cell_id_loaded_dsi = vdd->panel_func.samsung_cell_id_read(vdd);
+	}
+
+	/* Panel Unique OCTA ID (1.Manufacture Date -> 2.MDNIE X,Y -> 3.Cell ID -> 4.OCTA ID) */
+	if (!vdd->octa_id_loaded_dsi) {
+		if (IS_ERR_OR_NULL(vdd->panel_func.samsung_octa_id_read))
+			LCD_ERR("no samsung_octa_id_read function\n");
+		else
+			vdd->octa_id_loaded_dsi = vdd->panel_func.samsung_octa_id_read(vdd);
+	}
+
 	if (!vdd->samsung_splash_enabled) {
 		if (vdd->self_disp.self_mask_img_write)
 			vdd->self_disp.self_mask_img_write(vdd);
@@ -119,10 +173,13 @@ static struct dsi_panel_cmd_set *__ss_vrr(struct samsung_display_driver_data *vd
 	cur_rr = vrr->cur_refresh_rate;
 	cur_hs = vrr->cur_sot_hs_mode;
 
-	if (cur_rr == 60)
+	if (cur_rr == 60) {
 		vrr_cmds->cmds[0].ss_txbuf[1] = 0x00; /* 60 HZ */
-	else
-		vrr_cmds->cmds[0].ss_txbuf[1] = 0x80; /* 90 HZ */
+		vrr_cmds->cmds[0].ss_txbuf[2] = 0x00; /* 60 HZ */
+	} else {
+		vrr_cmds->cmds[0].ss_txbuf[1] = 0x08; /* 90 HZ */
+		vrr_cmds->cmds[0].ss_txbuf[2] = 0x00; /* 90 HZ */
+	}
 
 	LCD_INFO("VRR: (cur: %d%s, adj: %d%s)\n",
 			cur_rr,
@@ -149,6 +206,9 @@ static struct dsi_panel_cmd_set *ss_vrr_hbm(struct samsung_display_driver_data *
 	return __ss_vrr(vdd, level_key, is_hbm, is_hmt);
 }
 
+#define HBM_NORMAL_DELAY_60FPS (6)
+#define HBM_NORMAL_DELAY_90FPS (11)
+
 #define get_bit(value, shift, width)	((value >> shift) & (GENMASK(width - 1, 0)))
 static struct dsi_panel_cmd_set *ss_brightness_gamma_mode2_normal
 							(struct samsung_display_driver_data *vdd, int *level_key)
@@ -169,15 +229,14 @@ static struct dsi_panel_cmd_set *ss_brightness_gamma_mode2_normal
 
 	pcmds = ss_get_cmds(vdd, TX_GAMMA_MODE2_NORMAL);
 
-	/* Smooth transition : 0x28 */
-	pcmds->cmds[2].ss_txbuf[1] = vdd->finger_mask_updated ? 0x20 : 0x28;
-
+	/* WRDISBV(51h) */
 	pcmds->cmds[3].ss_txbuf[1] = get_bit(vdd->br_info.common_br.gm2_wrdisbv, 8, 8);
 	pcmds->cmds[3].ss_txbuf[2] = get_bit(vdd->br_info.common_br.gm2_wrdisbv, 0, 8);
 
+	/* Temperature ELVSS(B5h) */
 	pcmds->cmds[4].ss_txbuf[1] = vdd->br_info.temperature > 0 ?
-			vdd->br_info.temperature : (char)(BIT(7) | (-1 * vdd->br_info.temperature));
-	/* AOR */
+				vdd->br_info.temperature : (char)(BIT(7) | (-1 * vdd->br_info.temperature));
+	/* Manual AOR(63h) */
 	pcmds->cmds[6].ss_txbuf[1] = normal_aor_manual[cd_index].aor_63h_119;
 	pcmds->cmds[6].ss_txbuf[2] = normal_aor_manual[cd_index].aor_63h_120;
 	pcmds->cmds[6].ss_txbuf[3] = normal_aor_manual[cd_index].aor_63h_121;
@@ -206,12 +265,15 @@ static struct dsi_panel_cmd_set *ss_brightness_gamma_mode2_hbm
 
 	pcmds = ss_get_cmds(vdd, TX_GAMMA_MODE2_HBM);
 
+	/* WRDISBV(51h) */
 	pcmds->cmds[3].ss_txbuf[1] = get_bit(vdd->br_info.common_br.gm2_wrdisbv, 8, 8);
 	pcmds->cmds[3].ss_txbuf[2] = get_bit(vdd->br_info.common_br.gm2_wrdisbv, 0, 8);
 
+	/* Temperature ELVSS(B5h) */
 	pcmds->cmds[4].ss_txbuf[1] = vdd->br_info.temperature > 0 ?
 			vdd->br_info.temperature : (char)(BIT(7) | (-1 * vdd->br_info.temperature));
-	/* AOR */
+
+	/* Manual AOR(63h) */
 	pcmds->cmds[6].ss_txbuf[1] = hbm_aor_manual[cd_index].aor_63h_119;
 	pcmds->cmds[6].ss_txbuf[2] = hbm_aor_manual[cd_index].aor_63h_120;
 	pcmds->cmds[6].ss_txbuf[3] = hbm_aor_manual[cd_index].aor_63h_121;
@@ -313,7 +375,7 @@ static int ss_elvss_read(struct samsung_display_driver_data *vdd)
 
 static int ss_module_info_read(struct samsung_display_driver_data *vdd)
 {
-	unsigned char buf[11];
+	unsigned char buf[11] = {0,};
 	int year, month, day;
 	int hour, min;
 	int mdnie_tune_index = 0;
@@ -841,8 +903,8 @@ static int ss_vrr_init(struct vrr_info *vrr)
 	mutex_init(&vrr->vrr_lock);
 	mutex_init(&vrr->brr_lock);
 
-	/* Bootloader: FHD@60hz HS mode */
-	vrr->cur_refresh_rate = vrr->adjusted_refresh_rate = 60;
+	/* Bootloader: FHD@90hz HS mode */
+	vrr->cur_refresh_rate = vrr->adjusted_refresh_rate = 90;
 	vrr->cur_sot_hs_mode = vrr->adjusted_sot_hs_mode = true;
 
 	vrr->vrr_workqueue = create_singlethread_workqueue("vrr_workqueue");
@@ -1064,7 +1126,8 @@ void S6E3FC3_AMS638YQ01_FHD_init(struct samsung_display_driver_data *vdd)
 	vdd->panel_func.set_ffc = ss_ffc;
 
 	/* SAMSUNG_FINGERPRINT */
-	vdd->panel_hbm_exit_delay = 1;
+	vdd->panel_hbm_entry_delay = 0;
+	vdd->panel_hbm_exit_delay = 0;
 
 	/* mdnie */
 	vdd->mdnie.support_mdnie = true;

@@ -302,7 +302,8 @@ SEC_M42Q_EUR_DTBO := \
 		atoll-sec-m42q-eur-overlay-r01.dtbo \
 		atoll-sec-m42q-eur-overlay-r02.dtbo \
 		atoll-sec-m42q-eur-overlay-r04.dtbo \
-		atoll-sec-m42q-eur-overlay-r05.dtbo
+		atoll-sec-m42q-eur-overlay-r05.dtbo \
+		atoll-sec-m42q-eur-overlay-r06.dtbo
 
 # M42Q JPN
 SEC_M42Q_JPN_DTBO := \
@@ -316,7 +317,7 @@ SEC_M42Q_USA_DTBO := \
 		atoll-sec-m42q-usa-overlay-r01.dtbo \
 		atoll-sec-m42q-usa-overlay-r02.dtbo \
 		atoll-sec-m42q-usa-overlay-r04.dtbo \
-		atoll-sec-m42q-usa-overlay-r05.dtbo
+		atoll-sec-m42q-usa-overlay-r06.dtbo
 
 define __sec_dtbo_build
 dtbo-$(2) += $(1)

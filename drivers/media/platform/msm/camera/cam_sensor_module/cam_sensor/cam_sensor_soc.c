@@ -293,7 +293,7 @@ int32_t cam_sensor_get_sub_module_index(struct device_node *of_node,
 static int32_t cam_sensor_driver_get_dt_data(struct cam_sensor_ctrl_t *s_ctrl)
 {
 	int32_t rc = 0;
-#if CONFIG_S5KGW1P_SENSOR
+#if defined(CONFIG_S5KGW1P_SENSOR)
 	int i = 0;
 #endif /* NEVER */
 	struct cam_sensor_board_info *sensordata = NULL;
@@ -329,7 +329,7 @@ static int32_t cam_sensor_driver_get_dt_data(struct cam_sensor_ctrl_t *s_ctrl)
 	}
 
 	/* Store the index of BoB regulator if it is available */
-#if CONFIG_S5KGW1P_SENSOR
+#if defined(CONFIG_S5KGW1P_SENSOR)
 	for (i = 0; i < soc_info->num_rgltr; i++) {
 		if (!strcmp(soc_info->rgltr_name[i],
 			"cam_bob")) {

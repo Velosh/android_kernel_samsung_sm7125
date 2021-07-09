@@ -170,6 +170,8 @@ enum sm5714_usbpd_reg {
 	SM5714_REG_ADC_CNTL1		= 0x19,
 	SM5714_REG_ADC_CNTL2		= 0x1A,
 	SM5714_REG_SYS_CNTL			= 0x1B,
+	SM5714_REG_COMP_CNTL		= 0x1C,
+	SM5714_REG_CLK_CNTL			= 0x1D,
 	SM5714_REG_USBK_CNTL		= 0x1E,
 	SM5714_REG_CORR_CNTL1		= 0x20,
 	SM5714_REG_CORR_CNTL4		= 0x23,
@@ -184,8 +186,8 @@ enum sm5714_usbpd_reg {
 	SM5714_REG_CC_CNTL6			= 0x2E,
 	SM5714_REG_CC_CNTL7			= 0x2F,
 	SM5714_REG_CABLE_POL_SEL	= 0x33,
-	SM5714_REG_GEN_TMR_U		= 0x35,
-	SM5714_REG_GEN_TMR_L		= 0x36,
+	SM5714_REG_GEN_TMR_L		= 0x35,
+	SM5714_REG_GEN_TMR_U		= 0x36,
 	SM5714_REG_PD_CNTL1			= 0x38,
 	SM5714_REG_PD_CNTL2			= 0x39,
 	SM5714_REG_PD_CNTL4			= 0x3B,
@@ -288,11 +290,13 @@ struct sm5714_phydrv_data {
 	bool is_jig_case_on;
 	bool is_mpsm_exit;
 	bool suspended;
+	bool is_timer_expired;
 	int check_msg_pass;
 	int rid;
 	int is_attached;
 	int reset_done;
 	int pd_support;
+	int abnormal_dev_cnt;
 	struct delayed_work role_swap_work;
 	struct delayed_work usb_external_notifier_register_work;
 	struct notifier_block usb_external_notifier_nb;

@@ -145,8 +145,6 @@ int ist40xx_i2c_transfer(struct i2c_client *client, struct i2c_msg *msgs,
 	struct ist40xx_data *data = i2c_get_clientdata(client);
 
 #ifdef CONFIG_INPUT_SEC_SECURE_TOUCH
-	struct ist40xx_data *data = i2c_get_clientdata(client);
-
 	if (atomic_read(&data->st_enabled) == SECURE_TOUCH_ENABLED) {
 		input_err(true, &client->dev,
 			  "%s: TSP no accessible from Linux, TUI is enabled!\n",
