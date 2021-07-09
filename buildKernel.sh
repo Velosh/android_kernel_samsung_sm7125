@@ -41,11 +41,11 @@ clear
 
 # Remove out dir folder and clean the source
 if [ "${WITH_OUTDIR}" == true ]; then
-   if [ ! -d "$(pwd)/a72q" ]; then
-      mkdir a72q
+   if [ -d "$(pwd)/a72q" ]; then
+      rm -rf a72q
    fi
-   if [ ! -d "$(pwd)/a52q" ]; then
-      mkdir a52q
+   if [ -d "$(pwd)/a52q" ]; then
+      rm -rf a52q
    fi
 fi
 
@@ -61,12 +61,12 @@ fi
 
 if [ "${WITH_OUTDIR}" == true ]; then
    "${CCACHE}" make O=a72q vendor/a72q_defconfig
-   "${CCACHE}" make -j64 O=a72q
+   "${CCACHE}" make -j8 O=a72q
    tools/mkdtimg create a72q/arch/arm64/boot/dtbo.img --page_size=4096 $(find a72q/arch -name "*.dtbo")
 fi
 
 if [ "${WITH_OUTDIR}" == true ]; then
    "${CCACHE}" make O=a52q vendor/a52q_defconfig
-   "${CCACHE}" make -j64 O=a52q
+   "${CCACHE}" make -j8 O=a52q
    tools/mkdtimg create a52q/arch/arm64/boot/dtbo.img --page_size=4096 $(find a52q/arch -name "*.dtbo")
 fi
